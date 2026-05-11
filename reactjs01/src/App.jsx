@@ -1,16 +1,43 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect, useContext } from "react";
 import LoginPage from "./pages/login/login";
 import RegisterPage from "./pages/register/register";
-import React from "react";
+import Header from "./components/layout/header";
+import axios from "./util/axios-customize";
+import { AuthContext } from "./context/auth.context";
 
 function App() {
+  const { setAuth } = useContext(AuthContext);
+
+  useEffect(() => {
+    const fetchAccount = async () => {
+      const res = await axios.get('/v1/api/account');
+      if (res && res.data) {
+        setAuth({
+          isAuthenticated: true,
+          user: {
+            email: res.data.email,
+            name: res.data.name
+          }
+        })
+      }
+    }
+    if (localStorage.getItem('access_token')) {
+      fetchAccount();
+    }
+  }, []);
+
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<div>Trang chủ (Đã đăng nhập)</div>} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-      </Routes>
+      <Header />
+      <div style={{ padding: "20px" }}>
+        <Routes>
+          <Route path="/" element={<div><h2>Trang chủ</h2><p>Xin chào đến với dự án MERN Stack!</p></div>} />
+          <Route path="/user" element={<div><h2>Trang quản lý User (Bạn có thể tự làm table ở đây gọi api /user)</h2></div>} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Routes>
+      </div>
     </BrowserRouter>
   );
 }

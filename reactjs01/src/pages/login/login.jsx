@@ -1,15 +1,24 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Button, Form, Input, notification, Row, Col, Divider } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import axios from '../../util/axios-customize';
+import { AuthContext } from '../../context/auth.context';
 
 const LoginPage = () => {
     const navigate = useNavigate();
+    const { setAuth } = useContext(AuthContext);
 
     const onFinish = async (values) => {
         const res = await axios.post('/v1/api/login', values);
         if (res && res.data && res.data.EC === 0) {
             localStorage.setItem("access_token", res.data.access_token);
+            setAuth({
+                isAuthenticated: true,
+                user: {
+                    email: res.data.user.email,
+                    name: res.data.user.name
+                }
+            });
             notification.success({
                 message: "Đăng nhập",
                 description: "Thành công"
