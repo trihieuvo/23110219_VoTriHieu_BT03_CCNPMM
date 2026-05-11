@@ -17,6 +17,7 @@ dist/
 build/
 out/
 .next/
+.vite/
 
 # IDEs and Editors
 .vscode/
@@ -36,6 +37,8 @@ logs
 coverage/
 .npm
 .cache/
+.temp/
+.tmp/
 
 # Optional: Ignore package-lock.json
 # Xóa dấu thăng (#) bên dưới nếu bạn thực sự muốn bỏ qua file này (mặc dù nên giữ để đồng nhất version)
